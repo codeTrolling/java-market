@@ -1,17 +1,20 @@
 public class Product {
-    private String ID;
+    static Long GlobalID = Long.valueOf(0);
+
+    private Long ID;
     private ProductCategory category;
     private String name;
     private float price;
 
-    Product(String id, ProductCategory category, String name, float price) {
-        ID = id;
+    Product(ProductCategory category, String name, float price) {
+        ID = GlobalID;
+        GlobalID++;
         this.category = category;
         this.name = name;
         this.price = price;
     }
 
-    public String getID() {
+    public Long getID() {
         return ID;
     }
 
