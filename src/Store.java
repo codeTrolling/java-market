@@ -18,6 +18,7 @@ public class Store {
     private Map<Integer, Cashier> checkouts;
     private float foodMarkup;
     private float nonFoodMarkup;
+    private ArrayList<Product> initialProducts;
     private ArrayList<Product> products;
     private int daysToExpiryDateDiscount;
     // the percentage discount
@@ -29,13 +30,14 @@ public class Store {
     private ArrayList<ArrayList<String>> markedProducts = new ArrayList<ArrayList<String>>();
 
     private int receiptCount = 0; 
-    private float totalProfit = 0;
+    private float totalSalesRevenue = 0;
 
     Store(String name, ArrayList<Cashier> employees, float foodMarkup, float nonFoodMarkup, ArrayList<Product> products, int daysToExpiryDateDiscount, float expiryDateDiscount, int checkoutsCount) {
         this.name = name;
         this.employees = new ArrayList<Cashier>(employees);
         this.foodMarkup = foodMarkup;
         this.nonFoodMarkup = nonFoodMarkup;
+        this.initialProducts = new ArrayList<Product>(products);
         this.products = new ArrayList<Product>(products);
         this.daysToExpiryDateDiscount = daysToExpiryDateDiscount;
         this.expiryDateDiscount = expiryDateDiscount;
@@ -54,8 +56,8 @@ public class Store {
         return receiptCount;
     }
 
-    public float getTotalProfit() {
-        return totalProfit;
+    public float getSalesRevenue() {
+        return totalSalesRevenue;
     }
 
     public void changeEmployeeCheckout(int checkout, int employeeID) throws NoSuchCheckout, NoSuchEmployee {
@@ -159,7 +161,7 @@ public class Store {
 
         markedProducts.clear();
         receiptCount++;
-        totalProfit += totalPrice;
+        totalSalesRevenue += totalPrice;
     }
 
     private void serializeReceipt(String receipt) {
@@ -211,5 +213,28 @@ public class Store {
 
     public String getName() {
         return name;
+    }
+
+    public float getSalesProfit() {
+        float salesExpenses = 0;
+        for (int i = 0; i < products.size(); i++){
+            salesExpenses += products.get(i).getPrice() * products.get(i).getQuantity();
+        }
+        salesExpenses = Math.round(salesExpenses * 100f) / 100f;
+
+        return totalSalesRevenue - salesExpenses;
+    }
+
+    public float getEmployeeSalariesExpenses() {
+        float employeeSalaries = 0;
+        for (int i = 0; i < employees.size(); i++){
+            employeeSalaries += employees.get(i).getSalary();
+        }
+
+        return employeeSalaries;
+    }
+
+    public float getProfit() {
+        return Math.round((getSalesProfit() - getEmployeeSalariesExpenses()) * 100f) / 100f;
     }
 }
