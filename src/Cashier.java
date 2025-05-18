@@ -33,4 +33,8 @@ public class Cashier {
     public void setSalary(float salary) {
         this.salary = salary;
     }
+
+    public Long getID() {
+        return ID;
+    }
 }
