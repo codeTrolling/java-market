@@ -10,7 +10,7 @@ public class App {
         Product apple = new Product(ProductCategory.FOOD, "Apple", 1.28f, 30, LocalDate.of(2025, 5, 30));
         Product banana = new Product(ProductCategory.FOOD, "Banana", 1.39f, 3, LocalDate.of(2025, 5, 30));
         Product carOil = new Product(ProductCategory.NONFOOD, "Car Oil", 20.99f, 17, LocalDate.of(2027, 5, 30));
-        Store s = new Store(new ArrayList<>(Arrays.asList(c, c2)), 0.1f, 0.2f, new ArrayList<>(Arrays.asList(apple, banana, carOil)), 5, 0.5f, 4);
+        Store s = new Store("Walmart", new ArrayList<>(Arrays.asList(c, c2)), 0.1f, 0.2f, new ArrayList<>(Arrays.asList(apple, banana, carOil)), 5, 0.5f, 4);
 
         Client client = new Client(40);
         s.changeEmployeeCheckout(1, 0);
@@ -21,11 +21,13 @@ public class App {
 
         s.makePurchase(1, client);
 
-        s.markProduct("Banana");
-        s.markProduct("Banana");
-        s.markProduct("Banana");
-        s.markProduct("Banana");
-        s.makePurchase(1, client);
+        s.markProduct("Apple");
+        s.markProduct("Apple");
+        s.markProduct("Apple");
+        s.markProduct("Apple");
+        //s.makePurchase(1, client);
+
+        System.out.println(s.getReceipt(1));
 
         System.out.println(c.getFullName());
     }

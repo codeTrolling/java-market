@@ -1,3 +1,11 @@
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -14,6 +22,7 @@ public class Store {
     private int daysToExpiryDateDiscount;
     // the percentage discount
     private float expiryDateDiscount;
+    private String name;
 
     // The inner array lists contains the name of the product and the quantity to be marked/purchased.
     // e.g [["apple", "2"], ["banana", "4"]]
@@ -22,7 +31,8 @@ public class Store {
     private int receiptCount = 0; 
     private float totalProfit = 0;
 
-    Store(ArrayList<Cashier> employees, float foodMarkup, float nonFoodMarkup, ArrayList<Product> products, int daysToExpiryDateDiscount, float expiryDateDiscount, int checkoutsCount) {
+    Store(String name, ArrayList<Cashier> employees, float foodMarkup, float nonFoodMarkup, ArrayList<Product> products, int daysToExpiryDateDiscount, float expiryDateDiscount, int checkoutsCount) {
+        this.name = name;
         this.employees = new ArrayList<Cashier>(employees);
         this.foodMarkup = foodMarkup;
         this.nonFoodMarkup = nonFoodMarkup;
@@ -90,7 +100,8 @@ public class Store {
             throw new CheckoutIsInactive();
         }
 
-        String receipt = "Receipt number: " + receiptCount + 1 + "\nCashier: " + checkouts.get(checkout).getFullName() + "\nTime: " + LocalDate.now().toString() + "\n\nProducts:\n";
+        String receipt = "Receipt number: " + (receiptCount + 1) + "\nCashier: " + checkouts.get(checkout).getFullName() + "\nTime: " + LocalDate.now().toString() 
+        + "\n ==========================================" + "\nProducts:\n";
 
         float totalPrice = 0;
         for (int i = 0; i < markedProducts.size(); i++) {
@@ -133,6 +144,7 @@ public class Store {
         }
         
         System.out.println(receipt);
+        serializeReceipt(receipt);
         client.setBalance(client.getBalance() - totalPrice);
 
         for(int i = 0; i < markedProducts.size(); i++) {
@@ -148,5 +160,56 @@ public class Store {
         markedProducts.clear();
         receiptCount++;
         totalProfit += totalPrice;
+    }
+
+    private void serializeReceipt(String receipt) {
+        try {
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("Receipts/" + getName() + "_receipt_" + (receiptCount + 1) + ".ser"));
+            FileWriter writer = new FileWriter("Receipts/" + getName() + "_receipt_" + (receiptCount + 1) + ".txt");
+            writer.write(receipt);
+            out.writeObject(receipt);
+
+            writer.close();
+            out.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void cancelOrder() {
+        markedProducts.clear();
+    }
+
+    public String getReceipt(int number) {
+        try{
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream("Receipts/" + getName() + "_receipt_" + number + ".ser"));
+            String receipt = (String) in.readObject();
+            in.close();
+
+            return receipt;
+        }
+        catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return "Receipt not found";
+        }
+    }
+
+    public String getReceipt(String number) {
+        try{
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream("Receipts/" + getName() + "_receipt_" + number + ".ser"));
+            String receipt = (String) in.readObject();
+            in.close();
+
+            return receipt;
+        }
+        catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return "Receipt not found";
+        }
+    }
+
+    public String getName() {
+        return name;
     }
 }
