@@ -86,4 +86,16 @@ public class StoreTests {
 
         assertEquals(28, store.getProducts().get(0).getQuantity(), "The quantity of a product should go down with purchases");
     }
+
+    @Test
+    public void checkReceiptCount() {
+        store.markProduct("Apple");
+        store.markProduct("Apple");
+        store.makePurchase(1, client);
+        store.markProduct("Apple");
+        store.markProduct("Apple");
+        store.makePurchase(1, client);
+
+        assertEquals(2, store.getReceiptCount(), "The store should keep track of how many sales it has made.");
+    }
 }
