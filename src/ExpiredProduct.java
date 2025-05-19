@@ -1,4 +1,4 @@
-public class ExpiredProduct extends Exception {
+public class ExpiredProduct extends RuntimeException {
     ExpiredProduct(String message) {
         super(message);
     }

@@ -27,6 +27,6 @@ public class App {
         s.markProduct("Apple");
         s.makePurchase(1, client);
 
-        System.out.println("Total profit is: " + s.getProfit());
+        System.out.println("Total profit is: " + c.getID() + " " + c2.getID());
     }
 }

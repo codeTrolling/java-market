@@ -1,12 +1,12 @@
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -102,7 +102,8 @@ public class Store {
             throw new CheckoutIsInactive();
         }
 
-        String receipt = "Receipt number: " + (receiptCount + 1) + "\nCashier: " + checkouts.get(checkout).getFullName() + "\nTime: " + LocalDate.now().toString() 
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-dd-MM-HH:mm");
+        String receipt = "Receipt number: " + (receiptCount + 1) + "\nCashier: " + checkouts.get(checkout).getFullName() + "\nTime: " + LocalDateTime.now().format(dateFormatter)
         + "\n ==========================================" + "\nProducts:\n";
 
         float totalPrice = 0;
@@ -236,5 +237,11 @@ public class Store {
 
     public float getProfit() {
         return Math.round((getSalesProfit() - getEmployeeSalariesExpenses()) * 100f) / 100f;
+    }
+
+    // mainly for testing
+    public void addProduct(Product product) {
+        products.add(product);
+        initialProducts.add(product);
     }
 }

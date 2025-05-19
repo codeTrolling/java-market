@@ -1,4 +1,4 @@
-public class NotEnoughMoney extends Exception {
+public class NotEnoughMoney extends RuntimeException {
     NotEnoughMoney(String message) {
         super(message);
     }

@@ -1,4 +1,4 @@
-public class NotEnoughProduct extends Exception {
+public class NotEnoughProduct extends RuntimeException {
     NotEnoughProduct(String message) {
         super(message);
     }
