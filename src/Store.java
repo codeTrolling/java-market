@@ -37,8 +37,11 @@ public class Store {
         this.employees = new ArrayList<Cashier>(employees);
         this.foodMarkup = foodMarkup;
         this.nonFoodMarkup = nonFoodMarkup;
-        this.initialProducts = new ArrayList<Product>(products);
         this.products = new ArrayList<Product>(products);
+        this.initialProducts = new ArrayList<>();
+        products.forEach((product) -> {
+            initialProducts.add(new Product(product));
+        });
         this.daysToExpiryDateDiscount = daysToExpiryDateDiscount;
         this.expiryDateDiscount = expiryDateDiscount;
 
@@ -126,7 +129,7 @@ public class Store {
                     throw new ExpiredProduct(products.get(j).getName() + " has expired.");
                 }
                 if (daysUntilProductExpires <= daysToExpiryDateDiscount) {
-                    price += price * expiryDateDiscount;
+                    price -= price * expiryDateDiscount;
                 }
                 price = Math.round(price * 100f) / 100f;
                 totalPrice += price;
@@ -219,7 +222,7 @@ public class Store {
     public float getSalesProfit() {
         float salesExpenses = 0;
         for (int i = 0; i < products.size(); i++){
-            salesExpenses += products.get(i).getPrice() * products.get(i).getQuantity();
+            salesExpenses += products.get(i).getPrice() * initialProducts.get(i).getQuantity();
         }
         salesExpenses = Math.round(salesExpenses * 100f) / 100f;
 
@@ -243,5 +246,26 @@ public class Store {
     public void addProduct(Product product) {
         products.add(product);
         initialProducts.add(product);
+    }
+
+    public void soldProducts() {
+        System.out.println("Sold products:");
+        for(int i = 0; i < products.size(); i++) {
+            int soldCount = initialProducts.get(i).getQuantity() - products.get(i).getQuantity();
+            System.out.println(products.get(i).getName() + ": " + soldCount);
+
+            float expense = Math.round((initialProducts.get(i).getPrice() * initialProducts.get(i).getQuantity()) * 100f) / 100f;
+            float revenue = products.get(i).getPrice() * soldCount;
+            revenue += revenue * (products.get(i).getCategory() == ProductCategory.FOOD ? foodMarkup : nonFoodMarkup);
+            
+            long daysUntilProductExpires = ChronoUnit.DAYS.between(LocalDate.now(), products.get(i).getExpiryDate());
+            if (daysUntilProductExpires <= daysToExpiryDateDiscount) {
+                revenue += revenue * expiryDateDiscount;
+            }
+            revenue = Math.round(revenue * 100f) / 100f;
+
+            System.out.println("Revenue: " + (Math.round((revenue - expense) * 100f) / 100f));
+            System.out.println("=============================");
+        }
     }
 }

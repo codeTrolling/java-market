@@ -21,12 +21,14 @@ public class App {
 
         s.makePurchase(1, client);
 
-        s.markProduct("Apple");
-        s.markProduct("Apple");
+        s.markProduct("Banana");
+        s.markProduct("Banana");
         s.markProduct("Car Oil");
         s.markProduct("Apple");
         s.makePurchase(1, client);
 
-        System.out.println("Total profit is: " + c.getID() + " " + c2.getID());
+        s.soldProducts();
+        System.out.println("Total Sales Profit: " + s.getSalesProfit());
+        System.out.println("Total profit: " + s.getProfit());
     }
 }

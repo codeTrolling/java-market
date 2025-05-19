@@ -20,6 +20,15 @@ public class Product {
         this.expiryDate = expiryDate;
     }
 
+    Product(Product product) {
+        ID = product.getID();
+        category = product.getCategory();
+        name = product.getName();
+        price = product.getPrice();
+        quantity = product.getQuantity();
+        expiryDate = product.getExpiryDate();
+    }
+
     public Long getID() {
         return ID;
     }
