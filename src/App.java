@@ -7,28 +7,31 @@ public class App {
         System.out.println("Hello, World!");
         Cashier c = new Cashier("bob", "smith", 1000);
         Cashier c2 = new Cashier("John", "Smith", 30);
-        Product apple = new Product(ProductCategory.FOOD, "Apple", 1.28f, 30, LocalDate.of(2025, 5, 30));
-        Product banana = new Product(ProductCategory.FOOD, "Banana", 1.39f, 3, LocalDate.of(2025, 5, 30));
+        Product apple = new Product(ProductCategory.FOOD, "Apple", 1.28f, 30, LocalDate.of(2025, 6, 30));
+        Product banana = new Product(ProductCategory.FOOD, "Banana", 1.39f, 3, LocalDate.of(2025, 6, 30));
         Product carOil = new Product(ProductCategory.NONFOOD, "Car Oil", 20.99f, 17, LocalDate.of(2027, 5, 30));
         Store s = new Store("Walmart", new ArrayList<>(Arrays.asList(c, c2)), 0.1f, 0.2f, new ArrayList<>(Arrays.asList(apple, banana, carOil)), 5, 0.5f, 4);
+        StoreService ss = new StoreService();
 
         Client client = new Client(400);
-        s.changeEmployeeCheckout(1, 0);
-        s.markProduct("Apple");
-        s.markProduct("Apple");
-        s.markProduct("Banana");
-        s.markProduct("Car Oil");
+        ss.changeEmployeeCheckout(s, 1, 0);
+        ss.markProduct(s, "Apple");
+        ss.markProduct(s, "Apple");
+        ss.markProduct(s, "Banana");
+        ss.markProduct(s, "Car Oil");
 
-        s.makePurchase(1, client);
+        ss.makePurchase(s, 1, client);
 
-        s.markProduct("Banana");
-        s.markProduct("Banana");
-        s.markProduct("Car Oil");
-        s.markProduct("Apple");
-        s.makePurchase(1, client);
+        ss.markProduct(s, "Banana");
+        ss.markProduct(s, "Banana");
+        ss.markProduct(s, "Car Oil");
+        ss.markProduct(s, "Apple");
+        ss.makePurchase(s, 1, client);
 
-        s.soldProducts();
-        System.out.println("Total Sales Profit: " + s.getSalesProfit());
-        System.out.println("Total profit: " + s.getProfit());
+        ss.soldProducts(s);
+        System.out.println("Total Sales Profit: " + ss.getSalesProfit(s));
+        System.out.println("Total profit: " + ss.getProfit(s));
+
+        System.out.println(ss.getReceipt(s, 1));
     }
 }
